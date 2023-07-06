@@ -15,7 +15,6 @@ def index(request):
 def user_sign_up(request):
     email = request.data['email']
     password = request.data['password']
-    handle = request.data['handle']
     super_user = False
     staff = False
 
@@ -25,14 +24,14 @@ def user_sign_up(request):
     if 'staff' in request.data:
         staff = request.data['staff']
 
-    if email == '' or password == '' or handle == '':
+    if email == '' or password == '':
         return JsonResponse({"success": False, "reason": "empty field"})
 
     try:
         new_user = App_User.objects.create_user(
-            username=handle, handle=handle, email=email, password=password)
+            username= email, email=email, password=password)
         new_user.save()
-        return JsonResponse({"success": True, "note": f"{handle} has been created"})
+        return JsonResponse({"success": True, "note": f"{email} has been created"})
     except Exception as e:
         print(e)
         return JsonResponse({"success": False, "reason": "already signed up"})
